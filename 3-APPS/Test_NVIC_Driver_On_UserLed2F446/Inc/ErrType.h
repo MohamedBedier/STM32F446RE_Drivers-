@@ -11,6 +11,9 @@
 #define INIT_VALUE_BY_ZERO  0u
 #define INIT_VALUE_BY_ONE  1u
 
+#define ZERO_VALUE  0u
+#define ONE_VALUE   1u
+
 
 #define  DISABLED   1u
 #define  ENABLED    2u
