@@ -23,16 +23,24 @@
 
 /******************************    AHB1 Peripheral Base Addresses    ******************************/
 
-#define  GPIOA_BASE_ADDRESS   0x40020000U
-#define  GPIOB_BASE_ADDRESS   0x40020400U
-#define  GPIOC_BASE_ADDRESS   0x40020800U
-#define  GPIOD_BASE_ADDRESS   0x40020C00U
-#define  GPIOE_BASE_ADDRESS   0x40021000U
-#define  GPIOF_BASE_ADDRESS   0x40021400U
-#define  GPIOG_BASE_ADDRESS   0x40021800U
-#define  GPIOH_BASE_ADDRESS   0x40021C00U
+#define  GPIOA_BASE_ADDRESS   0x40020000UL
+#define  GPIOB_BASE_ADDRESS   0x40020400UL
+#define  GPIOC_BASE_ADDRESS   0x40020800UL
+#define  GPIOD_BASE_ADDRESS   0x40020C00UL
+#define  GPIOE_BASE_ADDRESS   0x40021000UL
+#define  GPIOF_BASE_ADDRESS   0x40021400UL
+#define  GPIOG_BASE_ADDRESS   0x40021800UL
+#define  GPIOH_BASE_ADDRESS   0x40021C00UL
+
+#define  RCC_BASE_ADDRESS     0x40023800UL
 
 
+
+/******************************    CORTEX-M4 Core Peripheral Base Addresses    ******************************/
+
+#define    NVIC_BASE_ADDRESS   0xE000E100UL
+
+#define    SYST_BASE_ADDRESS   0xE000E010UL
 
 /******************************    AHB2 Peripheral Base Addresses       ******************************/
 
@@ -43,23 +51,6 @@
 /******************************    APB1 Peripheral Base Addresses       ******************************/
 
 /******************************    APB2 Peripheral Base Addresses       ******************************/
-
-/******************************    GPIO Register Definitions Structure  ******************************/
-
-typedef  struct
-{
-	volatile  uint32_t  MODER;            /*GPIO PORT Mode Register*/
-	volatile  uint32_t  OTYPER;           /*GPIO PORT Output Type Register*/
-	volatile  uint32_t  OSPEEDR;          /*GPIO PORT Output speed Register*/
-	volatile  uint32_t  PUPDR;            /*GPIO PORT Pull up/down Register*/
-	volatile  uint32_t  IDR;              /*GPIO PORT input data Register*/
-	volatile  uint32_t  ODR;              /*GPIO PORT Output data Register*/
-	volatile  uint32_t  BSRR;             /*GPIO PORT Bit set/Reset Register*/
-	volatile  uint32_t  LCKR;             /*GPIO PORT Lock Register*/
-	volatile  uint32_t  AFR[2];           /*GPIO PORT Alternate function Register*/
-
-}GPIO_RegDef_t;	
-
 
 
 /******************************    RCC Register Definitions Structure  ******************************/
@@ -103,18 +94,24 @@ typedef struct
 
 }RCC_Reg_t;
 
+/******************************    RCC Peripheral Definitions       ******************************/
+#define   RCC  ((RCC_Reg_t*)RCC_BASE_ADDRESS)
 
-/******************************    Systick Register Definitions Structure  ******************************/
+/******************************    GPIO Register Definitions Structure  ******************************/
 
 typedef  struct
 {
-	volatile  uint32_t  SYST_CSR;            /*SysTick Control and Status Register*/
-	volatile  uint32_t  SYST_RVR;            /*SysTick Reload Value Register*/
-	volatile  uint32_t  SYST_CVR;            /* SysTick Current Value Register */
-	volatile  uint32_t   SYST_CALIB;         /* SysTick Calibration Value Register */
+	volatile  uint32_t  MODER;            /*GPIO PORT Mode Register*/
+	volatile  uint32_t  OTYPER;           /*GPIO PORT Output Type Register*/
+	volatile  uint32_t  OSPEEDR;          /*GPIO PORT Output speed Register*/
+	volatile  uint32_t  PUPDR;            /*GPIO PORT Pull up/down Register*/
+	volatile  uint32_t  IDR;              /*GPIO PORT input data Register*/
+	volatile  uint32_t  ODR;              /*GPIO PORT Output data Register*/
+	volatile  uint32_t  BSRR;             /*GPIO PORT Bit set/Reset Register*/
+	volatile  uint32_t  LCKR;             /*GPIO PORT Lock Register*/
+	volatile  uint32_t  AFR[2];           /*GPIO PORT Alternate function Register*/
 
-}SYSTICK_RegDef_t;
-
+}GPIO_RegDef_t;
 
 /******************************    GPIO Peripheral Definitions       ******************************/
 
@@ -128,6 +125,52 @@ typedef  struct
 #define   GPIOH     ((GPIO_RegDef_t*)GPIOH_BASE_ADDRESS)
 
 
+
+/******************************    Systick Register Definitions Structure  ******************************/
+
+typedef  struct
+{
+	volatile  uint32_t  SYST_CSR;            /*SysTick Control and Status Register*/
+	volatile  uint32_t  SYST_RVR;            /*SysTick Reload Value Register*/
+	volatile  uint32_t  SYST_CVR;            /* SysTick Current Value Register */
+	volatile  uint32_t   SYST_CALIB;         /* SysTick Calibration Value Register */
+
+}SYSTICK_RegDef_t;
+
+/******************************    SYSTICK Peripheral Definitions       ******************************/
+#define   SYSTICK  ((SYSTICK_RegDef_t*)SYST_BASE_ADDRESS)
+
+/******************************    NVIC Register Definitions   ******************************/
+
+#define  ISER    ((volatile uint32_t*)0xE000E100) /* Interrupt Set-enable Registers */
+#define  ICER    ((volatile uint32_t*)0XE000E180) /* Interrupt Clear-enable Registers */
+#define  ISPR    ((volatile uint32_t*)0XE000E200) /* Interrupt Set-pending Registers */
+#define  ICPR    ((volatile uint32_t*)0XE000E280) /* Interrupt Clear-pending Registers */
+#define  IABR    ((volatile uint32_t*)0xE000E300) /* Interrupt Active Bit Registers */
+#define  IPR     ((volatile uint32_t*)0xE000E400) /* Interrupt Priority Registers */
+#define  STIR    ((volatile uint32_t*)0xE000EF00) /* Software Trigger Interrupt Register*/
+
+/* if you want to work by Struct ,but you change in our code */
+
+//typedef struct
+//{
+//	volatile uint32_t ISER[8]; /* Interrupt Set-enable Registers */
+//	volatile uint32_t Reserved_1[24]; /* Offset */
+//	volatile uint32_t ICER[8]; /* Interrupt Clear-enable Registers */
+//	volatile uint32_t Reserved_2[24]; /* Offset */
+//	volatile uint32_t ISPR[8]; /* Interrupt Set-pending Registers */
+//	volatile uint32_t Reserved_3[24]; /* Offset */
+//	volatile uint32_t ICPR[8]; /* Interrupt Clear-pending Registers */
+//	volatile uint32_t Reserved_4[24]; /* Offset */
+//	volatile uint32_t IABR[8]; /* Interrupt Active Bit Registers */
+//	volatile uint32_t Reserved_5[56]; /* Offset */
+//	volatile uint8_t  IPR[240] ; /* Interrupt Priority Registers */
+//	volatile uint32_t Reserved_6[643]; /* Offset */
+//	volatile uint32_t STIR; /* Software Trigger Interrupt Register*/
+//
+//}NVIC_Reg_t;
+/******************* NVIC structure pointer **********************/
+//#define NVIC					((NVIC_Reg_t *)(NVIC_BASE_ADDRESS))
 
 
 

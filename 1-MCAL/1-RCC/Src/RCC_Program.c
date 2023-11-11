@@ -13,17 +13,10 @@
 #include "ErrType.h"
 #include "BIT_MATH.h"
 #include "Stm32F446xx.h"
-#include "RCC_Private.h"
 #include "RCC_Interface.h"
-
-/******************************    RCC Peripheral Base Addresses        ******************************/
-#define  RCC_BASE_ADDRESS     (RCC_Reg_t*)0x40023800U
+#include "RCC_Private.h"
 
 
-/* define a pointer from type of struct [RCC_Reg_t] which carry the base address of RCC
-			   Don't forget to cast it to (RCC_Reg_t* ) */
-
-static RCC_Reg_t* RCC = RCC_BASE_ADDRESS;
 
 uint8_t RCC_u8SetClkSts(ClkType_t Copy_EnumCLkType ,ClkStatus_t Copy_EnumCLkStatus)
 {

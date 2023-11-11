@@ -18,14 +18,6 @@
 #include "Systick_private.h"
 #include "Systick_interface.h"
 
-/******************************    SYSTICK Peripheral Base Addresses    ******************************/
-
-#define  SYST_BASE_ADDRESS   (SYSTICK_RegDef_t*)0xE000E010U
-
-/* define a pointer from type of struct [SYSTICK_RegDef_t] which carry the base address of SYST
-			   Don't forget to cast it to (SYSTICK_RegDef_t* ) */
-
-static SYSTICK_RegDef_t* SYSTICK = SYST_BASE_ADDRESS;
 
 /**
  * @fn SYSTICK_voidDelay_MS

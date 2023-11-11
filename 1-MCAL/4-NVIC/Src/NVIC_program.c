@@ -15,7 +15,6 @@
 #include "Stm32F446xx.h"
 #include "NVIC_private.h"
 #include "NVIC_interface.h"
-#include "NVIC_Reg.h"
 
 
 /**
@@ -42,7 +41,7 @@ uint8_t NVIC_u8Enable(IRQNum_t Copy_EnumIRQNum)
 	if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
 	{
 		/* set BitNum at RegNum */
-		ISER[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
+		NVIC->ISER[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
 	}else
 	{
 		/* update Local_u8ErrorState value*/
@@ -75,7 +74,7 @@ uint8_t NVIC_u8Disable(IRQNum_t Copy_EnumIRQNum)
 	if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
 	{
 		/* Clear BitNum at RegNum */
-		ICER[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
+		NVIC->ICER[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
 	}else
 	{
 		/* update Local_u8ErrorState value*/
@@ -108,14 +107,8 @@ uint8_t NVIC_u8SetPendingFlag(IRQNum_t Copy_EnumIRQNum)
 	/* protect our function to check on Copy_EnumIRQNum */
 	if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
 	{
-		/* Calculate this IRQNum at which register from 0 to 7  */
-		Local_u8RegNum = Copy_EnumIRQNum / REGISTER_BITS;
-
-		/* Calculate this IRQNum at which Bit from 0 to 31  */
-		Local_u8BitNum = Copy_EnumIRQNum % REGISTER_BITS;
-
 		/* set BitNum at RegNum */
-		ISPR[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
+		NVIC->ISPR[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
 	}else
 	{
 		/* update Local_u8ErrorState value*/
@@ -150,7 +143,7 @@ uint8_t NVIC_u8ClearPendingFlag(IRQNum_t Copy_EnumIRQNum)
 	if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
 	{
 		/* CLEAR BitNum at RegNum */
-		ICPR[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
+		NVIC->ICPR[Local_u8RegNum] = ONE_VALUE << Local_u8BitNum;
 	}else
 	{
 		/* update Local_u8ErrorState value*/
@@ -189,7 +182,7 @@ uint8_t NVIC_u8GetActiveFlag(IRQNum_t Copy_EnumIRQNum,uint8_t* Copy_u8ActiveFlag
 		if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
 		{
 			/* check on pending flag is raised or not */
-			if(GET_BIT(IABR[Local_u8RegNum],Local_u8BitNum) == ONE_VALUE)
+			if(GET_BIT((NVIC->IABR[Local_u8RegNum]),Local_u8BitNum) == ONE_VALUE)
 			{
 				/* Read BitNum at RegNum */
 				*Copy_u8ActiveFlag=PENDING;

@@ -19,7 +19,7 @@ typedef enum
 	TAMP_STAMP,
 	RTC_WKUP,
 	FLASH,
-	RCC,
+	RCC_IRQ ,/* I change its name because in stm32f446xx.h i have a pointer its name is RCC  */
 	EXTI0,
 	EXTI1,
 	EXTI2,
@@ -75,9 +75,7 @@ typedef enum
 	DMA2_Stream2,
 	DMA2_Stream3,
 	DMA2_Stream4,
-	RESERVED1,
-	RESERVED2,
-	CAN2_TX,
+	CAN2_TX=63,
 	CAN2_RX0,
 	CAN2_RX1,
 	CAN2_SCE,
@@ -93,19 +91,12 @@ typedef enum
 	OTG_HS_WKUP,
 	OTG_HS,
 	DCMI,
-	RESERVED3,
-	RESERVED4,
-	FPU,
+	FPU=81,
 	RESERVED5,
 	RESERVED6,
-	SPI4,
-	RESERVED7,
-	RESERVED8,
-	SAI1,
-	RESERVED9,
-	RESERVED10,
-	RESERVED11,
-	SAI2,
+	SPI4=84,
+	SAI1=87,
+	SAI2=91,
 	QuadSPI,
 	HDMI_CEC,
 	SPDIF_Rx,
@@ -115,9 +106,8 @@ typedef enum
 
 
 /**
- * @enum  : @PENDING_t
- * @brief : Holds Value of Pending State
- *
+ * @name : PENDING_t
+ * @brief  :This is an enum which carring pending state
  */
 typedef enum
 {
@@ -127,8 +117,8 @@ typedef enum
 }PENDING_t;
 
 /**
- * @enum  :  @ACTIVE_t
- * @brief : This Enum Holds Options of All Available Active STATUS
+ * @name  :  @ACTIVE_t
+ * @brief : This is an enum which carring Active STATUS
  *
  */
 typedef enum
@@ -140,34 +130,34 @@ typedef enum
 
 /**
  * @brief: This function to enable Peripheral from NVIC
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table (IRQ_Num)
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 uint8_t NVIC_u8Enable(IRQNum_t Copy_EnumIRQNum);
 
 /**
  * @brief: This function to Disable Peripheral from NVIC
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table (IRQ_Num)
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 uint8_t NVIC_u8Disable(IRQNum_t Copy_EnumIRQNum);
 /**
- * @brief: This function to Set Pending Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @brief: This function to Set Pending Flag from NVIC
+ * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table (IRQ_Num)
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 
 uint8_t NVIC_u8SetPendingFlag(IRQNum_t Copy_EnumIRQNum);
 /**
- * @brief: This function to clear Pending Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @brief: This function to clear Pending Flag from NVIC
+ * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table (IRQ_Num)
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 
 uint8_t NVIC_u8ClearPendingFlag(IRQNum_t Copy_EnumIRQNum);
 /**
  * @brief: This function to read active Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table (IRQ_Num)
  * @param[OUT] Copy_u8ActiveFlag : this Pointer to carry ActiveFlag State
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
