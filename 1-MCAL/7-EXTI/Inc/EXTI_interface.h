@@ -138,6 +138,7 @@ typedef struct
 	EXTI_Lines_t   EXTI_Line;
 	EdgeTrigger_t  EdgeTriggerSource;
 	EXTI_State_t   EXTI_State;
+	void (*CallBackFunc)(void);
 }EXTI_Config_t;
 
 
