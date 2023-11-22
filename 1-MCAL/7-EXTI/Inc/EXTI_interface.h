@@ -12,6 +12,36 @@
 #ifndef EXTI_INTERFACE_H_
 #define EXTI_INTERFACE_H_
 
+/**
+ * @brief : this enum to carry EXTI lines options from line 0 to line 22 totally 23 EXTI_lines
+ */
+typedef enum
+{
+  EXTI_Line0=0,/**< EXTI_Line0 */
+  EXTI_Line1,  /**< EXTI_Line1 */
+  EXTI_Line2,  /**< EXTI_Line2 */
+  EXTI_Line3,  /**< EXTI_Line3 */
+  EXTI_Line4,  /**< EXTI_Line4 */
+  EXTI_Line5,  /**< EXTI_Line5 */
+  EXTI_Line6,  /**< EXTI_Line6 */
+  EXTI_Line7,  /**< EXTI_Line7 */
+  EXTI_Line8,  /**< EXTI_Line8 */
+  EXTI_Line9,  /**< EXTI_Line9 */
+  EXTI_Line10, /**< EXTI_Line10 */
+  EXTI_Line11, /**< EXTI_Line11 */
+  EXTI_Line12, /**< EXTI_Line12 */
+  EXTI_Line13, /**< EXTI_Line13 */
+  EXTI_Line14, /**< EXTI_Line14 */
+  EXTI_Line15, /**< EXTI_Line15 */
+  EXTI_Line16, /**< EXTI_Line16 */
+  EXTI_Line17, /**< EXTI_Line17 */
+  EXTI_Line18, /**< EXTI_Line18 */
+  EXTI_Line19, /**< EXTI_Line19 */
+  EXTI_Line20, /**< EXTI_Line20 */
+  EXTI_Line21, /**< EXTI_Line21 */
+  EXTI_Line22  /**< EXTI_Line22 */
+
+}EXTI_Lines_t;
 
 /**
  * @brief : this enum to carry at which edge trigger generate EXTI
@@ -138,6 +168,7 @@ typedef struct
 	EXTI_Lines_t   EXTI_Line;
 	EdgeTrigger_t  EdgeTriggerSource;
 	EXTI_State_t   EXTI_State;
+	void (*CallBackFunc)(void);
 }EXTI_Config_t;
 
 

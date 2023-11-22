@@ -22,7 +22,7 @@
  * @param[in] Copy_EnumEXTI_PORT : this enum to carry options FROM PORTA TO PORTH
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
-uint8_t SYSCFG_u8SetEXTIPort(EXTI_Lines_t Copy_EnumEXTI_Line , EXTI_PORT_t Copy_EnumEXTI_PORT )
+uint8_t SYSCFG_u8SetEXTIPort(SYSCFG_Lines_t Copy_EnumEXTI_Line , SYSCFG_PORT_t Copy_EnumEXTI_PORT )
 {
 	/* define a variable to carry error state */
 	uint8_t Local_u8ErrorState=OK;
@@ -39,12 +39,12 @@ uint8_t SYSCFG_u8SetEXTIPort(EXTI_Lines_t Copy_EnumEXTI_Line , EXTI_PORT_t Copy_
 	/* Calculate the Bit number */
 	Local_u8BitNumber = (Copy_EnumEXTI_Line % MASKED_FOUR_BITS) * MASKED_FOUR_BITS ;
 
-	if((Copy_EnumEXTI_Line >= EXTI_Line0 ) && (Copy_EnumEXTI_Line <= EXTI_Line22))
+	if((Copy_EnumEXTI_Line >= SYSCFG_Line0 ) && (Copy_EnumEXTI_Line <= SYSCFG_Line22))
 	{
 		/* clear bits before use it */
 		SYSCFG->SYSCFG_EXTICR1[Local_u8RegNumber] &=(~((0xf) <<Local_u8BitNumber));
 
-		if((Copy_EnumEXTI_PORT>= EXTI_PORTA) && (Copy_EnumEXTI_PORT <= EXTI_PORTH))
+		if((Copy_EnumEXTI_PORT>= SYSCFG_PORTA) && (Copy_EnumEXTI_PORT <= SYSCFG_PORTH))
 		{
 			/* SET the value of the port inside our register */
 			SYSCFG->SYSCFG_EXTICR1[Local_u8RegNumber] |=(Copy_EnumEXTI_PORT<<Local_u8BitNumber);
