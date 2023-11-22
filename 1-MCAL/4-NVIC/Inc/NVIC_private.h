@@ -13,9 +13,10 @@
 
 #define  REGISTER_BITS  32u
 
+#define  PRIORITY_BITS  4u
 
 
-
+#define  PRIORITY_REG_MASK 0xF0
 
 
 #endif /* NVIC_PRIVATE_H_ */

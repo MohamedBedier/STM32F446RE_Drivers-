@@ -19,7 +19,7 @@
 
 /**
  * @brief: This function to enable Peripheral from NVIC
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 uint8_t NVIC_u8Enable(IRQNum_t Copy_EnumIRQNum)
@@ -52,7 +52,7 @@ uint8_t NVIC_u8Enable(IRQNum_t Copy_EnumIRQNum)
 
 /**
  * @brief: This function to Disable Peripheral from NVIC
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 uint8_t NVIC_u8Disable(IRQNum_t Copy_EnumIRQNum)
@@ -85,7 +85,7 @@ uint8_t NVIC_u8Disable(IRQNum_t Copy_EnumIRQNum)
 
 /**
  * @brief: This function to Set Pending Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 
@@ -120,7 +120,7 @@ uint8_t NVIC_u8SetPendingFlag(IRQNum_t Copy_EnumIRQNum)
 
 /**
  * @brief: This function to clear Pending Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
 
@@ -156,7 +156,7 @@ uint8_t NVIC_u8ClearPendingFlag(IRQNum_t Copy_EnumIRQNum)
 
 /**
  * @brief: This function to read active Flag
- * @param[IN] Copy_EnumIRQNum : this variable carry peripheral position in vector table
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table
  * @param[OUT] Copy_u8ActiveFlag : this variable carry ActiveFlag State
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
@@ -207,3 +207,32 @@ uint8_t NVIC_u8GetActiveFlag(IRQNum_t Copy_EnumIRQNum,uint8_t* Copy_u8ActiveFlag
 	return Local_u8ErrorState;
 }
 
+/**
+ * @brief: This function to set the priority from user [group and sub] by send Copy_u8Proirty
+ * @param[IN] Copy_EnumIRQNum : this enum carries peripheral position in vector table (IRQ_Num)
+ * @param[in] Copy_u8Proirty : this variable to carry priority
+ * @return Local_u8ErrorState : this variable to carry ErrorState value
+ */
+
+uint8_t NVIC_u8SetIRQPriorty(IRQNum_t Copy_EnumIRQNum,uint8_t  Copy_u8Proirty)
+{
+	/* define a variable to carry ErrorState value */
+	uint8_t Local_u8ErrorState;
+
+	/* protect our function to check on Copy_EnumIRQNum */
+	if((Copy_EnumIRQNum>=WWDG) && (Copy_EnumIRQNum<= FMPI2C1_error))
+	{
+
+		/* BIT MASKING to clear the last 4 bit in IPR[IRQ_Number]*/
+		NVIC->IPR[Copy_EnumIRQNum] &= ( ~( PRIORITY_REG_MASK )) ;
+		/* set priority */
+		NVIC->IPR[Copy_EnumIRQNum]= (Copy_u8Proirty << PRIORITY_BITS);
+
+	}else
+	{
+		/* update Local_u8ErrorState value*/
+		Local_u8ErrorState=NOK;
+	}
+
+	return Local_u8ErrorState;
+}
