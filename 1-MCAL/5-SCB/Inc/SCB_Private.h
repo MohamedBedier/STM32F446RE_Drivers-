@@ -18,9 +18,7 @@
 #define  PRIGROUP_START_BIT  8u
 #define  FAULT_MASK_BITS     7u
 #define  FAULT_ENA_START_BITS     16u
-
 #define  FAULT_PENDING_START_BITS    12u
-
 #define  NUM_SYS_EXCEPTIONS   10u
 
 

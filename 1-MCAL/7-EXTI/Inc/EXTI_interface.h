@@ -214,7 +214,7 @@ uint8_t  EXTI_u8ReadPendingFlag(EXTI_SWIER_AND_PR_BitNum_t Copy_EnumEXTIBitNum ,
  * @param[in] Copy_EnumEXTIBitNum this enum to carry EXTI Bit Num
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
-uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, TriggerBitNum_t Copy_EnumEXTIBitNum);
+uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, EXTI_FALLING_AND_RISING_BitNum_t Copy_EnumEXTIBitNum);
 
 /**
  * @brief : this function to generate Software Interrupt Event

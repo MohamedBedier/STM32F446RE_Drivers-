@@ -47,8 +47,8 @@ uint8_t EXTI_u8Init(EXTI_Config_t *Copy_psEXTIConfig)
 			CLR_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
 			break;
 		case FALLING_AND_RISING_EDGE:
-			SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);
-			SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);
+			SET_BIT(EXTI->EXTI_RTSR,(Copy_psEXTIConfig->EXTI_Line));
+			SET_BIT(EXTI->EXTI_FTSR,(Copy_psEXTIConfig->EXTI_Line));
 			break;
 		default:Local_u8ErrorState=NOK;/* update Error state value  */
 		}
@@ -110,7 +110,7 @@ uint8_t  EXTI_u8DisableInterrupt(EXTI_IMR_AND_EMR_BitNum_t Copy_EnumEXTIBitNum)
 	/* define a variable to carry error state */
 	uint8_t Local_u8ErrorState=OK;
 
-	if((Copy_EnumEXTIBitNum >= EXTI_MR0) && (Copy_EnumEXTIBitNum<= EXTI_TR22))
+	if((Copy_EnumEXTIBitNum >= EXTI_MR0) && (Copy_EnumEXTIBitNum<= EXTI_MR22))
 	{
 		CLR_BIT(EXTI->EXTI_IMR,Copy_EnumEXTIBitNum);
 	}else
@@ -204,7 +204,7 @@ uint8_t  EXTI_u8ReadPendingFlag(EXTI_SWIER_AND_PR_BitNum_t Copy_EnumEXTIBitNum ,
  * @param[in] Copy_EnumEXTIBitNum this enum to carry EXTI Bit Num
  * @return Local_u8ErrorState : this variable to carry ErrorState value
  */
-uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, TriggerBitNum_t Copy_EnumEXTIBitNum)
+uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, EXTI_FALLING_AND_RISING_BitNum_t Copy_EnumEXTIBitNum)
 {
 	/* define a variable to carry error state */
 	uint8_t Local_u8ErrorState=OK;
@@ -212,15 +212,15 @@ uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, TriggerBitNum_t C
 	if((Copy_EnumEXTIBitNum >= EXTI_TR0) && (Copy_EnumEXTIBitNum<= EXTI_TR22)  && (Copy_EnumEXTIBitNum != RESERVED))
 	{
 		/*	setting trigger source configuration  */
-		switch(Copy_psEXTIConfig->EdgeTriggerSource)
+		switch(Copy_EnumSenseCTRL)
 		{
 		case RISING_EDGE:
-			SET_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));
-			CLR_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			SET_BIT((EXTI->EXTI_RTSR),Copy_EnumEXTIBitNum);
+			CLR_BIT((EXTI->EXTI_FTSR),Copy_EnumEXTIBitNum);/* to make sure that no both edge will happen */
 			break;
 		case FALLING_EDGE:
-			SET_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));
-			CLR_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			SET_BIT((EXTI->EXTI_FTSR),Copy_EnumEXTIBitNum);
+			CLR_BIT((EXTI->EXTI_RTSR),Copy_EnumEXTIBitNum);/* to make sure that no both edge will happen */
 			break;
 		case FALLING_AND_RISING_EDGE:
 			SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);
@@ -271,7 +271,7 @@ void EXTI0_IRQHandler()
 	/* clear pending flag by 1*/
 	SET_BIT((EXTI->EXTI_PR),EXTI_Line0);
 	/* Calling ISR */
-	Copy_pfFuncPtr[EXTI_Line0]();
+	EXTI_pfFuncPtr[EXTI_Line0]();
 }
 
 void EXTI1_IRQHandler()
@@ -279,7 +279,7 @@ void EXTI1_IRQHandler()
 	/* clear pending flag by 1*/
 	SET_BIT((EXTI->EXTI_PR),EXTI_Line1);
 	/* Calling ISR */
-	Copy_pfFuncPtr[EXTI_Line1]();
+	EXTI_pfFuncPtr[EXTI_Line1]();
 }
 
 void EXTI2_IRQHandler()
@@ -287,7 +287,7 @@ void EXTI2_IRQHandler()
 	/* clear pending flag by 1*/
 	SET_BIT((EXTI->EXTI_PR),EXTI_Line2);
 	/* Calling ISR */
-	Copy_pfFuncPtr[EXTI_Line2]();
+	EXTI_pfFuncPtr[EXTI_Line2]();
 }
 
 void EXTI3_IRQHandler()
@@ -295,7 +295,7 @@ void EXTI3_IRQHandler()
 	/* clear pending flag by 1*/
 	SET_BIT((EXTI->EXTI_PR),EXTI_Line3);
 	/* Calling ISR */
-	Copy_pfFuncPtr[EXTI_Line3]();
+	EXTI_pfFuncPtr[EXTI_Line3]();
 }
 
 void EXTI4_IRQHandler()
@@ -303,7 +303,7 @@ void EXTI4_IRQHandler()
 	/* clear pending flag by 1*/
 	SET_BIT((EXTI->EXTI_PR),EXTI_Line4);
 	/* Calling ISR */
-	Copy_pfFuncPtr[EXTI_Line4]();
+	EXTI_pfFuncPtr[EXTI_Line4]();
 }
 
 void EXTI9_5_IRQHandler()
@@ -313,42 +313,42 @@ void EXTI9_5_IRQHandler()
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line5);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line5]();
+		EXTI_pfFuncPtr[EXTI_Line5]();
 	}
 	if(EXTI6_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line6);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line6]();
+		EXTI_pfFuncPtr[EXTI_Line6]();
 	}
 	if(EXTI7_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line7);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line7]();
+		EXTI_pfFuncPtr[EXTI_Line7]();
 	}
 	if(EXTI7_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line7);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line7]();
+		EXTI_pfFuncPtr[EXTI_Line7]();
 	}
 	if(EXTI8_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line8);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line8]();
+		EXTI_pfFuncPtr[EXTI_Line8]();
 	}
 	if(EXTI9_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line9);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line9]();
+		EXTI_pfFuncPtr[EXTI_Line9]();
 	}
 	else
 	{
@@ -363,42 +363,42 @@ void EXTI15_10_IRQHandler()
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line10);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line10]();
+		EXTI_pfFuncPtr[EXTI_Line10]();
 	}
 	if(EXTI11_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line11);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line11]();
+		EXTI_pfFuncPtr[EXTI_Line11]();
 	}
 	if(EXTI12_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line12);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line12]();
+		EXTI_pfFuncPtr[EXTI_Line12]();
 	}
 	if(EXTI13_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line13);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line13]();
+		EXTI_pfFuncPtr[EXTI_Line13]();
 	}
 	if(EXTI14_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line14);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line14]();
+		EXTI_pfFuncPtr[EXTI_Line14]();
 	}
 	if(EXTI15_PENDING_FLAG == FLAG_RAISED)
 	{
 		/* clear pending flag by 1*/
 		SET_BIT((EXTI->EXTI_PR),EXTI_Line15);
 		/* Calling ISR */
-		Copy_pfFuncPtr[EXTI_Line15]();
+		EXTI_pfFuncPtr[EXTI_Line15]();
 	}
 	else
 	{

@@ -22,13 +22,6 @@
 
 static void (*SCB_pfFuncPtr[NUM_SYS_EXCEPTIONS]) (void)= {NULL};
 
-
-
-
-
-
-
-
 /**
  * @brief: This function to set the priority Group from user by send Copy_EnumProirtyGroup
  * @param[in] Copy_EnumProirtyGroup : this enum to carry priority Group
@@ -74,7 +67,7 @@ uint8_t SCB_u8EnableFaultExceptions(SHCSR_t  Copy_EnumSHCSR)
 	uint8_t Local_u8ErrorState;
 
 	/* protect our function by check on Copy_EnumProirtyGroup which will send by user*/
-	if((Copy_EnumProirtyGroup >= MEMFAULTENA) && (Copy_EnumProirtyGroup <= USGFAULTENA))
+	if((Copy_EnumSHCSR >= MEMFAULTENA) && (Copy_EnumSHCSR <= USGFAULTENA))
 	{
 		/* clear bit before using */
 		SCB->SHCSR &= (~(ONE_VALUE << FAULT_ENA_START_BITS));
@@ -100,7 +93,7 @@ uint8_t SCB_u8DisableFaultExceptions(SHCSR_t  Copy_EnumSHCSR)
 	uint8_t Local_u8ErrorState;
 
 	/* protect our function by check on Copy_EnumProirtyGroup which will send by user*/
-	if((Copy_EnumProirtyGroup >= MEMFAULTENA) && (Copy_EnumProirtyGroup <= USGFAULTENA))
+	if((Copy_EnumSHCSR >= MEMFAULTENA) && (Copy_EnumSHCSR <= USGFAULTENA))
 	{
 		/* clear bit to disable */
 		CLR_BIT((SCB->SHCSR),Copy_EnumSHCSR);
@@ -124,7 +117,7 @@ uint8_t SCB_u8SetPendingFaultExceptions(SHCSR_t  Copy_EnumSHCSR)
 	uint8_t Local_u8ErrorState;
 
 	/* protect our function by check on Copy_EnumProirtyGroup which will send by user*/
-	if((Copy_EnumProirtyGroup >= USGFAULTPENDED) && (Copy_EnumProirtyGroup <= SVCALLPENDED))
+	if((Copy_EnumSHCSR >= USGFAULTPENDED) && (Copy_EnumSHCSR <= SVCALLPENDED))
 	{
 		/* clear bit before using */
 		SCB->SHCSR &= (~(ONE_VALUE << FAULT_PENDING_START_BITS));
@@ -150,7 +143,7 @@ uint8_t SCB_u8ClearPendingFaultExceptions(SHCSR_t  Copy_EnumSHCSR)
 	uint8_t Local_u8ErrorState;
 
 	/* protect our function by check on Copy_EnumProirtyGroup which will send by user*/
-	if((Copy_EnumProirtyGroup >= USGFAULTPENDED) && (Copy_EnumProirtyGroup <= SVCALLPENDED))
+	if((Copy_EnumSHCSR >= USGFAULTPENDED) && (Copy_EnumSHCSR <= SVCALLPENDED))
 	{
 		/* clear bit to disable pending flag */
 		CLR_BIT((SCB->SHCSR),Copy_EnumSHCSR);
@@ -195,9 +188,9 @@ uint8_t SCB_u8SetCallBack(ISRNames_t  Copy_EnumISRNames ,void (*Copy_pfFuncPtr)(
 void Reset_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[Reset_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_Reset_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[Reset_Handler]();
+		SCB_pfFuncPtr[ISRName_Reset_Handler]();
 	}
 }
 
@@ -207,9 +200,9 @@ void Reset_Handler (void)
 void NMI_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[NMI_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_NMI_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[NMI_Handler]();
+		SCB_pfFuncPtr[ISRName_NMI_Handler]();
 	}
 }
 /**
@@ -219,9 +212,9 @@ void NMI_Handler (void)
 void HardFault_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[HardFault_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_HardFault_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[HardFault_Handler]();
+		SCB_pfFuncPtr[ISRName_HardFault_Handler]();
 	}
 }
 /**
@@ -230,9 +223,9 @@ void HardFault_Handler (void)
 void MemManage_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[MemManage_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_MemManage_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[MemManage_Handler]();
+		SCB_pfFuncPtr[ISRName_MemManage_Handler]();
 	}
 }
 /**
@@ -241,9 +234,9 @@ void MemManage_Handler (void)
 void BusFault_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[BusFault_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_BusFault_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[BusFault_Handler]();
+		SCB_pfFuncPtr[ISRName_BusFault_Handler]();
 	}
 }
 
@@ -253,9 +246,9 @@ void BusFault_Handler (void)
 void UsageFault_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[UsageFault_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_UsageFault_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[UsageFault_Handler]();
+		SCB_pfFuncPtr[ISRName_UsageFault_Handler]();
 	}
 }
 /**
@@ -264,9 +257,9 @@ void UsageFault_Handler (void)
 void SVC_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[SVC_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_SVC_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[SVC_Handler]();
+		SCB_pfFuncPtr[ISRName_SVC_Handler]();
 	}
 }
 /**
@@ -275,9 +268,9 @@ void SVC_Handler (void)
 void DebugMon_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[DebugMon_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_DebugMon_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[DebugMon_Handler]();
+		SCB_pfFuncPtr[ISRName_DebugMon_Handler]();
 	}
 }
 /**
@@ -286,9 +279,9 @@ void DebugMon_Handler (void)
 void PendSV_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[PendSV_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_PendSV_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[PendSV_Handler]();
+		SCB_pfFuncPtr[ISRName_PendSV_Handler]();
 	}
 }
 /**
@@ -297,9 +290,9 @@ void PendSV_Handler (void)
 void SysTick_Handler (void)
 {
 	/* check on the global Array of pointer to function is still refer to NULL OR NOT */
-	if(SCB_pfFuncPtr[SysTick_Handler] != NULL)
+	if(SCB_pfFuncPtr[ISRName_SysTick_Handler] != NULL)
 	{
-		SCB_pfFuncPtr[SysTick_Handler]();
+		SCB_pfFuncPtr[ISRName_SysTick_Handler]();
 	}
 }
 

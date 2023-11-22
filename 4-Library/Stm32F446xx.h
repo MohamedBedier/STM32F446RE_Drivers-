@@ -44,6 +44,8 @@
 
 #define    SYSCFG_BASE_ADDRESS   0x40013800UL
 
+#define    SCB_BASE_ADDRESS      0xE000ED00UL
+
 /******************************    AHB2 Peripheral Base Addresses       ******************************/
 
 #define    EXTI_BASE_ADDRESS     0x40013C00UL
@@ -179,13 +181,39 @@ typedef struct
 //#define  IPR     ((volatile uint8_t*)0xE000E400) /* Interrupt Priority Registers */
 //#define  STIR    ((volatile uint32_t*)0xE000EF00) /* Software Trigger Interrupt Register*/
 
+
+
+/******************************    SCB Register Definitions   ******************************/
+typedef struct
+{
+	volatile  uint32_t   CPUID;
+	volatile  uint32_t   ICSR;
+	volatile  uint32_t   VTOR;
+	volatile  uint32_t   AIRCR;
+	volatile  uint32_t   SCR;
+	volatile  uint32_t   CCR;
+	volatile  uint32_t   SHPR1;
+	volatile  uint32_t   SHPR2;
+	volatile  uint32_t   SHPR3;
+	volatile  uint32_t   SHCSR;
+	volatile  uint32_t   CFSR;
+	volatile  uint32_t   HFSR;
+	volatile  uint32_t   MMAR;
+	volatile  uint32_t   BFAR;
+	volatile  uint32_t   AFSR;
+}SCB_Reg_t;
+
+/******************************    SCB structure pointer **********************/
+#define      SCB		((SCB_Reg_t *)(SCB_BASE_ADDRESS))
 /******************************    SYSCFG Register Definitions   ******************************/
 typedef struct
 {
 	volatile uint32_t SYSCFG_MEMRMP; /* SYSCFG memory remap register */
 	volatile uint32_t SYSCFG_PMC; /* SYSCFG peripheral mode configuration register  */
 	volatile uint32_t SYSCFG_EXTICR1[4]; /* SYSCFG external interrupt configuration register 1 TO 4 */
+	volatile uint32_t RESERVED1[2];
 	volatile uint32_t SYSCFG_CMPCR; /* Compensation cell control register */
+	volatile uint32_t RESERVED2[2];
 	volatile uint32_t SYSCFG_CFGR; /* SYSCFG configuration register */
 
 }SYSCFG_Reg_t;

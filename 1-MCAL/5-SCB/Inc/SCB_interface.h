@@ -63,16 +63,16 @@ typedef enum
  */
 typedef enum
 {
-	Reset_Handler=0,
-	NMI_Handler,
-	HardFault_Handler,
-	MemManage_Handler,
-	BusFault_Handler,
-	UsageFault_Handler,
-	SVC_Handler,
-	DebugMon_Handler,
-	PendSV_Handler,
-	SysTick_Handler
+	ISRName_Reset_Handler=0,
+	ISRName_NMI_Handler,
+	ISRName_HardFault_Handler,
+	ISRName_MemManage_Handler,
+	ISRName_BusFault_Handler,
+	ISRName_UsageFault_Handler,
+	ISRName_SVC_Handler,
+	ISRName_DebugMon_Handler,
+	ISRName_PendSV_Handler,
+	ISRName_SysTick_Handler
 }ISRNames_t;
 
 
