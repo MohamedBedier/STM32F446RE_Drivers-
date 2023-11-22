@@ -46,6 +46,7 @@
 
 /******************************    AHB2 Peripheral Base Addresses       ******************************/
 
+#define    EXTI_BASE_ADDRESS     0x40013C00UL
 
 /******************************    AHB3 Peripheral Base Addresses       ******************************/
 
@@ -190,6 +191,25 @@ typedef struct
 }SYSCFG_Reg_t;
 /******************* NVIC structure pointer **********************/
 #define    SYSCFG		((SYSCFG_Reg_t *)(SYSCFG_BASE_ADDRESS))
+
+
+
+
+/******************************    EXTII Register Definitions   ******************************/
+typedef struct
+{
+	volatile uint32_t EXTI_IMR; /* Interrupt mask register */
+	volatile uint32_t EXTI_EMR; /* Event mask register  */
+	volatile uint32_t EXTI_RTSR; /* Rising trigger selection register */
+	volatile uint32_t EXTI_FTSR; /* Falling trigger selection register */
+	volatile uint32_t EXTI_SWIER; /* Software interrupt event register */
+	volatile uint32_t EXTI_PR;   /* Pending register */
+}EXTI_Reg_t;
+/******************* EXTI structure pointer **********************/
+#define    EXTI		((EXTI_Reg_t *)(EXTI_BASE_ADDRESS))
+
+
+
 
 
 #endif
