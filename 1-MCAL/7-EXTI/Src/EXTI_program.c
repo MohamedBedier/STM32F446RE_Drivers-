@@ -16,12 +16,68 @@
 #include "EXTI_private.h"
 #include "EXTI_interface.h"
 
-/******************************/
-/***    Global variabled    ***/
-/******************************/
+
+/***    Global array of pointer to function to hold callback functions   ***/
+
 
 static void (*EXTI_pfFuncPtr[NUM_OF_EXTI]) (void)= {NULL};
 
+
+/**
+ * @brief : this function to initiate EXTI
+ * @param[in] Copy_psEXTIConfig : pointer from struct which carrying EXTI registers
+ * @return Local_u8ErrorState : this variable to carry ErrorState value
+ */
+uint8_t EXTI_u8Init(EXTI_Config_t *Copy_psEXTIConfig)
+{
+	/* define a variable to carry error state */
+	uint8_t Local_u8ErrorState=OK;
+
+	if(Copy_psEXTIConfig != NULL)
+	{
+		/*	setting trigger source configuration  */
+		switch(Copy_psEXTIConfig->EdgeTriggerSource)
+		{
+		case RISING_EDGE:
+			SET_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));
+			CLR_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			break;
+		case FALLING_EDGE:
+			SET_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));
+			CLR_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			break;
+		case FALLING_AND_RISING_EDGE:
+			SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);
+			SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);
+			break;
+		default:Local_u8ErrorState=NOK;/* update Error state value  */
+		}
+		/*	setting trigger Enable or disable for the EXTI  */
+		switch(Copy_psEXTIConfig->EXTI_State)
+		{
+		case EXTI_ENABLED:SET_BIT((EXTI->EXTI_IMR),(Copy_psEXTIConfig->EXTI_Line));break;
+		case EXTI_DISABLED:CLR_BIT((EXTI->EXTI_IMR),(Copy_psEXTIConfig->EXTI_Line));break;
+		default:Local_u8ErrorState=NOK;/* update Error state value  */
+		}
+		/*setting Callback function pointer */
+		if(Copy_psEXTIConfig->CallBackFunc != NULL)
+		{
+			EXTI_pfFuncPtr[Copy_psEXTIConfig->EXTI_Line]=Copy_psEXTIConfig->CallBackFunc;
+		}else
+		{
+			/* update Error state value  */
+			Local_u8ErrorState=NULL_PTR_ERR;
+		}
+
+	}else
+	{
+		/* update Error state value  */
+		Local_u8ErrorState=NULL_PTR_ERR;
+	}
+
+	/* return Error state value  and end the function */
+	return Local_u8ErrorState;
+}
 /**
  * @brief : this function to Enable Interrupt
  * @param[in] Copy_EnumEXTIBitNum this enum to carry EXTI Bit Num
@@ -34,7 +90,7 @@ uint8_t  EXTI_u8EnableInterrupt(EXTI_IMR_AND_EMR_BitNum_t Copy_EnumEXTIBitNum)
 
 	if((Copy_EnumEXTIBitNum >= EXTI_MR0) && (Copy_EnumEXTIBitNum<= EXTI_MR22))
 	{
-		SET_BIT(EXTI->EXTI_EMR,Copy_EnumEXTIBitNum);
+		SET_BIT(EXTI->EXTI_IMR,Copy_EnumEXTIBitNum);
 	}else
 	{
 		/* update Error state value  */
@@ -56,7 +112,7 @@ uint8_t  EXTI_u8DisableInterrupt(EXTI_IMR_AND_EMR_BitNum_t Copy_EnumEXTIBitNum)
 
 	if((Copy_EnumEXTIBitNum >= EXTI_MR0) && (Copy_EnumEXTIBitNum<= EXTI_TR22))
 	{
-		CLR_BIT(EXTI->EXTI_EMR,Copy_EnumEXTIBitNum);
+		CLR_BIT(EXTI->EXTI_IMR,Copy_EnumEXTIBitNum);
 	}else
 	{
 		/* update Error state value  */
@@ -155,11 +211,21 @@ uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, TriggerBitNum_t C
 
 	if((Copy_EnumEXTIBitNum >= EXTI_TR0) && (Copy_EnumEXTIBitNum<= EXTI_TR22)  && (Copy_EnumEXTIBitNum != RESERVED))
 	{
-		switch(Copy_EnumSenseCTRL)
+		/*	setting trigger source configuration  */
+		switch(Copy_psEXTIConfig->EdgeTriggerSource)
 		{
-		case RISING_EDGE:SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);break;
-		case FALLING_EDGE:SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);break;
-		case FALLING_AND_RISING_EDGE:SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);break;
+		case RISING_EDGE:
+			SET_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));
+			CLR_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			break;
+		case FALLING_EDGE:
+			SET_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));
+			CLR_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));/* to make sure that no both edge will happen */
+			break;
+		case FALLING_AND_RISING_EDGE:
+			SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);
+			SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);
+			break;
 		default:Local_u8ErrorState=NOK;/* update Error state value  */
 		}
 	}else
@@ -173,43 +239,7 @@ uint8_t  EXTI_u8SenseControl(EdgeTrigger_t Copy_EnumSenseCTRL, TriggerBitNum_t C
 }
 
 
-/**
- * @brief : this function to initiate EXTI
- * @param[in] Copy_psEXTIConfig : pointer from struct which carrying EXTI registers
- * @return Local_u8ErrorState : this variable to carry ErrorState value
- */
-uint8_t EXTI_u8Init(EXTI_Config_t *Copy_psEXTIConfig)
-{
-	/* define a variable to carry error state */
-	uint8_t Local_u8ErrorState=OK;
 
-	if(Copy_psEXTIConfig != NULL)
-	{
-
-		switch(Copy_psEXTIConfig->EdgeTriggerSource)
-		{
-		case RISING_EDGE:SET_BIT((EXTI->EXTI_RTSR),(Copy_psEXTIConfig->EXTI_Line));break;
-		case FALLING_EDGE:SET_BIT((EXTI->EXTI_FTSR),(Copy_psEXTIConfig->EXTI_Line));break;
-		case FALLING_AND_RISING_EDGE:SET_BIT(EXTI->EXTI_RTSR,Copy_EnumEXTIBitNum);SET_BIT(EXTI->EXTI_FTSR,Copy_EnumEXTIBitNum);break;
-		default:Local_u8ErrorState=NOK;/* update Error state value  */
-		}
-
-		switch(Copy_psEXTIConfig->EXTI_State)
-		{
-		case EXTI_ENABLED:SET_BIT((EXTI->EXTI_EMR),(Copy_psEXTIConfig->EXTI_Line));break;
-		case EXTI_DISABLED:CLR_BIT((EXTI->EXTI_EMR),(Copy_psEXTIConfig->EXTI_Line));break;
-		default:Local_u8ErrorState=NOK;/* update Error state value  */
-		}
-
-	}else
-	{
-		/* update Error state value  */
-		Local_u8ErrorState=NULL_PTR_ERR;
-	}
-
-	/* return Error state value  and end the function */
-	return Local_u8ErrorState;
-}
 
 /**
  * @brief: This function to Set Call Back for EXTI from user by send address of the function which writting in APP
