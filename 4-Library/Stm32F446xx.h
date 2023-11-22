@@ -38,12 +38,15 @@
 
 /******************************    CORTEX-M4 Core Peripheral Base Addresses    ******************************/
 
-#define    NVIC_BASE_ADDRESS   0xE000E100UL
+#define    NVIC_BASE_ADDRESS     0xE000E100UL
 
-#define    SYST_BASE_ADDRESS   0xE000E010UL
+#define    SYST_BASE_ADDRESS     0xE000E010UL
+
+#define    SYSCFG_BASE_ADDRESS   0x40013800UL
 
 /******************************    AHB2 Peripheral Base Addresses       ******************************/
 
+#define    EXTI_BASE_ADDRESS     0x40013C00UL
 
 /******************************    AHB3 Peripheral Base Addresses       ******************************/
 
@@ -140,37 +143,72 @@ typedef  struct
 /******************************    SYSTICK Peripheral Definitions       ******************************/
 #define   SYSTICK  ((SYSTICK_RegDef_t*)SYST_BASE_ADDRESS)
 
+
 /******************************    NVIC Register Definitions   ******************************/
 
-#define  ISER    ((volatile uint32_t*)0xE000E100) /* Interrupt Set-enable Registers */
-#define  ICER    ((volatile uint32_t*)0XE000E180) /* Interrupt Clear-enable Registers */
-#define  ISPR    ((volatile uint32_t*)0XE000E200) /* Interrupt Set-pending Registers */
-#define  ICPR    ((volatile uint32_t*)0XE000E280) /* Interrupt Clear-pending Registers */
-#define  IABR    ((volatile uint32_t*)0xE000E300) /* Interrupt Active Bit Registers */
-#define  IPR     ((volatile uint32_t*)0xE000E400) /* Interrupt Priority Registers */
-#define  STIR    ((volatile uint32_t*)0xE000EF00) /* Software Trigger Interrupt Register*/
+/* if you want to work by Struct */
 
-/* if you want to work by Struct ,but you change in our code */
+typedef struct
+{
+	volatile uint32_t ISER[8]; /* Interrupt Set-enable Registers */
+	volatile uint32_t Reserved_1[24]; /* Offset */
+	volatile uint32_t ICER[8]; /* Interrupt Clear-enable Registers */
+	volatile uint32_t Reserved_2[24]; /* Offset */
+	volatile uint32_t ISPR[8]; /* Interrupt Set-pending Registers */
+	volatile uint32_t Reserved_3[24]; /* Offset */
+	volatile uint32_t ICPR[8]; /* Interrupt Clear-pending Registers */
+	volatile uint32_t Reserved_4[24]; /* Offset */
+	volatile uint32_t IABR[8]; /* Interrupt Active Bit Registers */
+	volatile uint32_t Reserved_5[56]; /* Offset */
+	volatile uint8_t  IPR[240] ; /* Interrupt Priority Registers */
+	volatile uint32_t Reserved_6[643]; /* Offset */
+	volatile uint32_t STIR; /* Software Trigger Interrupt Register*/
 
-//typedef struct
-//{
-//	volatile uint32_t ISER[8]; /* Interrupt Set-enable Registers */
-//	volatile uint32_t Reserved_1[24]; /* Offset */
-//	volatile uint32_t ICER[8]; /* Interrupt Clear-enable Registers */
-//	volatile uint32_t Reserved_2[24]; /* Offset */
-//	volatile uint32_t ISPR[8]; /* Interrupt Set-pending Registers */
-//	volatile uint32_t Reserved_3[24]; /* Offset */
-//	volatile uint32_t ICPR[8]; /* Interrupt Clear-pending Registers */
-//	volatile uint32_t Reserved_4[24]; /* Offset */
-//	volatile uint32_t IABR[8]; /* Interrupt Active Bit Registers */
-//	volatile uint32_t Reserved_5[56]; /* Offset */
-//	volatile uint8_t  IPR[240] ; /* Interrupt Priority Registers */
-//	volatile uint32_t Reserved_6[643]; /* Offset */
-//	volatile uint32_t STIR; /* Software Trigger Interrupt Register*/
-//
-//}NVIC_Reg_t;
+}NVIC_Reg_t;
 /******************* NVIC structure pointer **********************/
-//#define NVIC					((NVIC_Reg_t *)(NVIC_BASE_ADDRESS))
+#define   NVIC	((NVIC_Reg_t *)(NVIC_BASE_ADDRESS))
+
+
+/* if you want to work by Macros ,but you change in our code only delete [NVIC->] */
+
+//#define  ISER    ((volatile uint32_t*)0xE000E100) /* Interrupt Set-enable Registers */
+//#define  ICER    ((volatile uint32_t*)0XE000E180) /* Interrupt Clear-enable Registers */
+//#define  ISPR    ((volatile uint32_t*)0XE000E200) /* Interrupt Set-pending Registers */
+//#define  ICPR    ((volatile uint32_t*)0XE000E280) /* Interrupt Clear-pending Registers */
+//#define  IABR    ((volatile uint32_t*)0xE000E300) /* Interrupt Active Bit Registers */
+//#define  IPR     ((volatile uint8_t*)0xE000E400) /* Interrupt Priority Registers */
+//#define  STIR    ((volatile uint32_t*)0xE000EF00) /* Software Trigger Interrupt Register*/
+
+/******************************    SYSCFG Register Definitions   ******************************/
+typedef struct
+{
+	volatile uint32_t SYSCFG_MEMRMP; /* SYSCFG memory remap register */
+	volatile uint32_t SYSCFG_PMC; /* SYSCFG peripheral mode configuration register  */
+	volatile uint32_t SYSCFG_EXTICR1[4]; /* SYSCFG external interrupt configuration register 1 TO 4 */
+	volatile uint32_t SYSCFG_CMPCR; /* Compensation cell control register */
+	volatile uint32_t SYSCFG_CFGR; /* SYSCFG configuration register */
+
+}SYSCFG_Reg_t;
+/******************* NVIC structure pointer **********************/
+#define    SYSCFG		((SYSCFG_Reg_t *)(SYSCFG_BASE_ADDRESS))
+
+
+
+
+/******************************    EXTII Register Definitions   ******************************/
+typedef struct
+{
+	volatile uint32_t EXTI_IMR; /* Interrupt mask register */
+	volatile uint32_t EXTI_EMR; /* Event mask register  */
+	volatile uint32_t EXTI_RTSR; /* Rising trigger selection register */
+	volatile uint32_t EXTI_FTSR; /* Falling trigger selection register */
+	volatile uint32_t EXTI_SWIER; /* Software interrupt event register */
+	volatile uint32_t EXTI_PR;   /* Pending register */
+}EXTI_Reg_t;
+/******************* EXTI structure pointer **********************/
+#define    EXTI		((EXTI_Reg_t *)(EXTI_BASE_ADDRESS))
+
+
 
 
 

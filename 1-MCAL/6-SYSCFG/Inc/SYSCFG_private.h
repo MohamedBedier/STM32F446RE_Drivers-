@@ -2,21 +2,16 @@
 /*************************************************************/
 /**                                                         **/
 /** LayerArchitect: MCAL                                    **/
-/** File Name : NVIC_private.h                              **/
+/** File Name : SYSCFG_private.h                            **/
 /** Auther    : MOHAMED BEDIER MOHAMED                      **/
 /** Verision :  1.00                                        **/
 /**                                                         **/
 /*************************************************************/
 /*************************************************************/
-#ifndef NVIC_PRIVATE_H_
-#define NVIC_PRIVATE_H_
 
-#define  REGISTER_BITS  32u
+#ifndef SYSCFG_PRIVATE_H_
+#define SYSCFG_PRIVATE_H_
 
-#define  PRIORITY_BITS  4u
+#define  MASKED_FOUR_BITS  4u
 
-
-#define  PRIORITY_REG_MASK 0xF0
-
-
-#endif /* NVIC_PRIVATE_H_ */
+#endif /* SYSCFG_PRIVATE_H_ */
